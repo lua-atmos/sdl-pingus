@@ -1,0 +1,22 @@
+^"event.ceu"
+^"int.ceu"
+^"pico.ceu"
+
+^"menu.ceu"
+
+output pico Pico.Output.Set.Title _("Pingus")
+output pico Pico.Output.Set.Size [_641,_481]
+output pico Pico.Output.Set.Zoom [_100,_100]
+output pico Pico.Output.Set.Grid _0
+output pico Pico.Output.Set.Color.Clear [_0,_0,_0,_255]
+output pico Pico.Output.Clear
+output pico Pico.Output.Set.Auto _0
+
+spawn {
+    loop {
+        var opt = await menu ()
+        output std opt
+    }
+}
+
+call pico_loop ()

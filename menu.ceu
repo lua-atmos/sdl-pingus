@@ -1,0 +1,16 @@
+task menu_button: [pos:Point,tit:_(char*)] -> () -> _int {
+    every evt?Draw {
+        output pico Pico.Output.Draw.Image [arg.pos, _("data/images/menuitem.png")]
+        output pico Pico.Output.Set.Font [_("data/fonts/film-cryptic/Filmcryptic.ttf"),_45]
+        output pico Pico.Output.Draw.Text [arg.pos, arg.tit]
+    }
+}
+
+task menu: () -> () -> _int {
+    var b1 = spawn menu_button [[_(-125),_(  35)], _("Story")]
+    var b2 = spawn menu_button [[_( 125),_(  35)], _("Editor")]
+    var b3 = spawn menu_button [[_(-125),_( -35)], _("Levelsets")]
+    var b4 = spawn menu_button [[_( 125),_( -35)], _("Options")]
+    var b5 = spawn menu_button [[_(   0),_(-105)], _("Exit")]
+    await _0
+}
