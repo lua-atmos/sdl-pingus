@@ -2,14 +2,12 @@ task menu_button: [pos:Point,tit:_(char*)] -> () -> _int {
     var size: Size
     output pico Pico.Output.Get.Size.Image [/size, _("data/images/menuitem.png")]
 
-    par {
-        loop {
-            await evt?Mouse?Button?Down until isPointVsRect [pos,[arg.pos,size]]
-                where {
-                    var pos = evt!Mouse!Button!Down.pos
-                }
-            output std ()
-        }
+    paror {
+        await evt?Mouse?Button?Down until isPointVsRect [pos,[arg.pos,size]]
+            where {
+                var pos = evt!Mouse!Button!Down.pos
+            }
+output std _111:_int
     } with {
         every evt?Draw {
             output pico Pico.Output.Draw.Image [arg.pos, _("data/images/menuitem.png")]
@@ -17,13 +15,26 @@ task menu_button: [pos:Point,tit:_(char*)] -> () -> _int {
             output pico Pico.Output.Draw.Text [arg.pos, arg.tit]
         }
     }
+output std _222:_int
 }
 
-task menu: () -> () -> _int {
-    var b1 = spawn menu_button [[_(-125),_(  35)], _("Story")]
-    var b2 = spawn menu_button [[_( 125),_(  35)], _("Editor")]
-    var b3 = spawn menu_button [[_(-125),_( -35)], _("Levelsets")]
-    var b4 = spawn menu_button [[_( 125),_( -35)], _("Options")]
-    var b5 = spawn menu_button [[_(   0),_(-105)], _("Exit")]
+task menu: () -> () -> Menu {
+    par {
+        await menu_button [[_(-125),_(  35)], _("Story")]
+output std _333:_int
+        return Menu.Story
+    } with {
+        await menu_button [[_( 125),_(  35)], _("Editor")]
+        return Menu.Editor
+    } with {
+        await menu_button [[_(-125),_( -35)], _("Levelsets")]
+        return Menu.Levelsets
+    } with {
+        await menu_button [[_( 125),_( -35)], _("Options")]
+        return Menu.Options
+    } with {
+        await menu_button [[_(   0),_(-105)], _("Exit")]
+        return Menu.Exit
+    }
     await _0
 }

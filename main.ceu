@@ -2,6 +2,8 @@
 ^"int.ceu"
 ^"pico.ceu"
 
+type Menu = <Story=(),Editor=(),Levelsets=(),Options=(),Exit=()>
+
 ^"menu.ceu"
 
 output pico Pico.Output.Set.Title _("Pingus")
@@ -14,8 +16,9 @@ output pico Pico.Output.Set.Auto _0
 
 spawn {
     loop {
+output std _000:_int
         var opt = await menu ()
-        output std opt
+        output std /opt
     }
 }
 
