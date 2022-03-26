@@ -16,9 +16,15 @@ output pico Pico.Output.Set.Auto _0
 
 spawn {
     loop {
-output std _000:_int
-        var opt = await menu ()
-        output std /opt
+        var opt = await spawn menu ()
+        var str: _(char*) = ifs {
+            opt ? Story     { _("Story")     }
+            opt ? Editor    { _("Editor")    }
+            opt ? Levelsets { _("Levelsets") }
+            opt ? Options   { _("Options")   }
+            opt ? Exit      { _("Exit")      }
+        }
+        await spawn menu_button [[_0,_0], str]
     }
 }
 
