@@ -4,36 +4,61 @@ type Pingu = task PointF -> () -> ()
 
 var gravity: _float = _(-0.2)
 
+task sprite: [pos:/PointF, n:_int, path:_(char*)] -> () -> () {
+    var sz: Size
+    output pico Pico.Output.Get.Size.Image [/sz, arg.path]
+    var w = div [sz.w, arg.n]
+    var h = sz.h
+
+    var i: _int
+    par {
+        set i = _0
+        every 25ms {
+            set i = rem [add [i,w], sz.w]
+        }
+    } with {
+        every evt?Draw {
+            output pico Pico.Output.Set.Image.Crop [[i,_0],[w,h]]
+            output pico Pico.Output.Set.Image.Size [w,h]
+            output pico Pico.Output.Draw.Image [
+                [arg.pos\.x::_int,arg.pos\.y::_int],
+                arg.path
+            ]
+        }
+    }
+}
+
 task pingu: Pingu {
     var spd: PointF = [_0,_0]
     var pos: PointF = arg
 
     task faller: () -> () -> () {
+        defer {
+            set spd.y = _0
+        }
+        spawn sprite [/pos, _8, _("data/images/faller.png")]
         every evt?Frame {
             if flt [pos.y, _(-200)] {
-                set spd.y = _0
                 break
             }
             set spd.y = fadd [spd.y, fdiv [fmul [evt!Frame::_float,gravity], _1000]]
         }
     }
 
-    spawn faller ()
-    spawn {
-        --await spawn faller ()
-        --await spawn walker ()
+    task walker: () -> () -> () {
+        set spd.x = _(0.1)
+        spawn sprite [/pos, _8, _("data/images/walker.png")]
+        await _0
     }
 
-    par {
-        every evt?Draw {
-            output pico Pico.Output.Set.Image.Crop [[_0,_0],[_32,_32]]
-            output pico Pico.Output.Set.Image.Size [_32,_32]
-            output pico Pico.Output.Draw.Image [[pos.x::_int,pos.y::_int], _("data/images/walker.png")]
-        }
-    } with {
-        every evt?Frame {
-            set pos.y = fadd [pos.y, fmul [evt!Frame::_float,spd.y]]
-        }
+    spawn {
+        await spawn faller ()
+        await spawn walker ()
+    }
+
+    every evt?Frame {
+        set pos.x = fadd [pos.x, fmul [evt!Frame::_float,spd.x]]
+        set pos.y = fadd [pos.y, fmul [evt!Frame::_float,spd.y]]
     }
 }
 
