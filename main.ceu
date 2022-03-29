@@ -13,7 +13,7 @@ output pico Pico.Output.Set.Title _("Pingus")
 output pico Pico.Output.Set.Size [_641,_481]
 output pico Pico.Output.Set.Zoom [_100,_100]
 output pico Pico.Output.Set.Grid _0
-output pico Pico.Output.Set.Color.Clear [_255,_255,_255,_255]
+output pico Pico.Output.Set.Color.Clear [_200,_200,_200,_255]
 output pico Pico.Output.Clear
 output pico Pico.Output.Set.Auto _0
 

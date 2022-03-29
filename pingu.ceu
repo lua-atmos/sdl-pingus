@@ -46,9 +46,18 @@ task pingu: Pingu {
     }
 
     task walker: () -> () -> () {
-        set spd.x = _(0.1)
-        spawn sprite [/pos, _8, _("data/images/walker.png")]
-        await _0
+        loop {
+            {
+                set spd.x = _(0.05)
+                spawn sprite [/pos, _8, _("data/images/right.png")]
+                await evt?Frame until fgte [pos.x, _300]
+            }
+            {
+                set spd.x = _(-0.05)
+                spawn sprite [/pos, _8, _("data/images/left.png")]
+                await evt?Frame until flte [pos.x, _(-320)]
+            }
+        }
     }
 
     spawn {
