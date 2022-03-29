@@ -1,0 +1,14 @@
+type Pingu = task Point -> () -> ()
+
+task pingu: Pingu {
+    spawn {
+        every evt?Draw {
+            output pico Pico.Output.Set.Image.Crop [[_0,_0],[_32,_32]]
+            output pico Pico.Output.Set.Image.Size [_32,_32]
+            output pico Pico.Output.Draw.Image [arg, _("data/images/walker.png")]
+        }
+    }
+    await _0
+}
+
+

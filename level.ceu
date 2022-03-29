@@ -1,0 +1,8 @@
+task level: () -> () -> () {
+    var pingus: active {} Pingu
+    var i: _int = _(-100)
+    every 1s {
+        spawn pingu [i,_0] in pingus
+        set i = add [i, _10]
+    }
+}

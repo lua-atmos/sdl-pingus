@@ -16,7 +16,7 @@ task menu_button: [pos:Point,tit:_(char*)] -> () -> () {
         }
 }
 
-task menu: () -> () -> Menu {
+task main_menu: () -> () -> Menu {
     par {
         await spawn menu_button [[_(-125),_(  35)], _("Story")]
         return Menu.Story

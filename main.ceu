@@ -1,10 +1,12 @@
-^"event.ceu"
+^"prelude.ceu"
 ^"int.ceu"
 ^"pico.ceu"
 
 type Menu = <Story=(),Editor=(),Levelsets=(),Options=(),Exit=()>
 
 ^"menu.ceu"
+^"pingu.ceu"
+^"level.ceu"
 
 output pico Pico.Output.Set.Title _("Pingus")
 output pico Pico.Output.Set.Size [_641,_481]
@@ -15,16 +17,17 @@ output pico Pico.Output.Clear
 output pico Pico.Output.Set.Auto _0
 
 spawn {
+    await spawn level ()
+
     loop {
-        var opt = await spawn menu ()
-        var str: _(char*) = ifs {
-            opt ? Story     { _("Story")     }
-            opt ? Editor    { _("Editor")    }
-            opt ? Levelsets { _("Levelsets") }
-            opt ? Options   { _("Options")   }
-            opt ? Exit      { _("Exit")      }
+        var opt = await spawn main_menu ()
+        ifs {
+            opt ? Story     { await spawn level () }
+            opt ? Editor    { await spawn menu_button [[_0,_0], _("Editor")   ] }
+            opt ? Levelsets { await spawn menu_button [[_0,_0], _("Levelsets")] }
+            opt ? Options   { await spawn menu_button [[_0,_0], _("Options")  ] }
+            opt ? Exit      { native _(exit(0);) }
         }
-        await spawn menu_button [[_0,_0], str]
     }
 }
 
