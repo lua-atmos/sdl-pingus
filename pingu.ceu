@@ -4,12 +4,18 @@ type Pingu = task PointF -> () -> ()
 
 var gravity: _float = _(-0.2)
 
-task faller: () -> () -> () {
-}
-
 task pingu: Pingu {
-    var speed: [_float,_float] = [_0,_0]
+    var spd: PointF = [_0,_0]
     var pos: PointF = arg
+
+    task faller: () -> () -> () {
+        every evt?Frame {
+            set spd.y = fadd [spd.y, fdiv [fmul [evt!Frame::_float,gravity], _1000]]
+        }
+    }
+
+    spawn faller ()
+
     par {
         every evt?Draw {
             output pico Pico.Output.Set.Image.Crop [[_0,_0],[_32,_32]]
@@ -18,10 +24,9 @@ task pingu: Pingu {
         }
     } with {
         every evt?Frame {
-            set pos.y = fadd [pos.y, fmul [evt!Frame::_float,gravity]]
+            set pos.y = fadd [pos.y, fmul [evt!Frame::_float,spd.y]]
         }
     }
-    await _0
 }
 
 
