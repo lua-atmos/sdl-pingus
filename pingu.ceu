@@ -10,11 +10,19 @@ task pingu: Pingu {
 
     task faller: () -> () -> () {
         every evt?Frame {
+            if flt [pos.y, _(-200)] {
+                set spd.y = _0
+                break
+            }
             set spd.y = fadd [spd.y, fdiv [fmul [evt!Frame::_float,gravity], _1000]]
         }
     }
 
     spawn faller ()
+    spawn {
+        --await spawn faller ()
+        --await spawn walker ()
+    }
 
     par {
         every evt?Draw {
