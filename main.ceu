@@ -1,5 +1,6 @@
 ^"prelude.ceu"
 ^"int.ceu"
+^"float.ceu"
 ^"pico.ceu"
 
 type Menu = <Story=(),Editor=(),Levelsets=(),Options=(),Exit=()>
