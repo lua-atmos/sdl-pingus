@@ -1,36 +1,31 @@
-task menu_button: [pos:Point,tit:_(char*)] -> () -> () {
-    var size: Size
-    output pico Pico.Output.Get.Size.Image [/size, _("data/images/menuitem.png")]
-
+task Menu_Button (x,y, tit) {
+    var size = pico_state_get_size_image("data/images/menuitem.png")
     spawn {
-        every evt?Draw {
-            output pico Pico.Output.Draw.Image [arg.pos, _("data/images/menuitem.png")]
-            output pico Pico.Output.Set.Font [_("data/fonts/film-cryptic/Filmcryptic.ttf"),_45]
-            output pico Pico.Output.Draw.Text [arg.pos, arg.tit]
+        every :draw {
+            pico_output_draw_image(x,y, "data/images/menuitem.png")
+            pico_state_set_font("data/fonts/film-cryptic/Filmcryptic.ttf", 45)
+            pico_output_draw_text(x,y, tit)
         }
     }
-
-    await evt?Mouse?Button?Down until isPointVsRect [pos,[arg.pos,size]]
-        where {
-            var pos = evt!Mouse!Button!Down.pos
-        }
+    await (evt is :mousebuttondown) and
+          pico_point_vs_rect?([evt.0,evt.1], [x,y,size.0,size.1])
 }
 
-task main_menu: () -> () -> Menu {
-    par {
-        await spawn menu_button [[_(-125),_(  35)], _("Story")]
-        return Menu.Story
+task Main_Menu () {
+    paror {
+        await spawn Menu_Button(-125,   35, "Story")
+        :Menu.Story
     } with {
-        await spawn menu_button [[_( 125),_(  35)], _("Editor")]
-        return Menu.Editor
+        await spawn Menu_Button( 125,   35, "Editor")
+        :Menu.Editor
     } with {
-        await spawn menu_button [[_(-125),_( -35)], _("Levelsets")]
-        return Menu.Levelsets
+        await spawn Menu_Button(-125,  -35, "Levelsets")
+        :Menu.Levelsets
     } with {
-        await spawn menu_button [[_( 125),_( -35)], _("Options")]
-        return Menu.Options
+        await spawn Menu_Button( 125,  -35, "Options")
+        :Menu.Options
     } with {
-        await spawn menu_button [[_(   0),_(-105)], _("Exit")]
-        return Menu.Exit
+        await spawn Menu_Button(   0, -105, "Exit")
+        :Menu.Exit
     }
 }

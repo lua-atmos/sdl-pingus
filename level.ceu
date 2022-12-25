@@ -1,6 +1,16 @@
-task level: () -> () -> () {
-    var pingus: active {} Pingu
+;;;
+type Tile = [pos:Point, path:_(char*)] + <
+    Background = ()
+    Liquid     = ()
+    Hotspot    = ()
+    Ground     = ()
+>
+var tiles = ...
+;;;
+
+task Level () {
+    var pingus = coroutines()
     every 1s {
-        spawn pingu [_0,_200] in pingus
+        spawn in pingus, Pingu([0,200])
     }
 }

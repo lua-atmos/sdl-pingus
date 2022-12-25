@@ -1,35 +1,30 @@
-^"prelude.ceu"
-^"int.ceu"
-^"float.ceu"
-^"pico.ceu"
+^["pico.ceu"]
+^["menu.ceu"]
+^["pingu.ceu"]
+^["level.ceu"]
 
-type Menu = <Story=(),Editor=(),Levelsets=(),Options=(),Exit=()>
+pico_state_set_title("Pingus")
+pico_state_set_size_pixel(1,1)
+pico_state_set_size(641,481)
+pico_state_set_grid(false)
+pico_state_set_color_clear(200,200,200,255)
+pico_state_set_auto()
 
-^"menu.ceu"
-^"pingu.ceu"
-^"level.ceu"
+catch err==:exit {
+    spawn {
+        await spawn Level ()
 
-output pico Pico.Output.Set.Title _("Pingus")
-output pico Pico.Output.Set.Size [_641,_481]
-output pico Pico.Output.Set.Zoom [_100,_100]
-output pico Pico.Output.Set.Grid _0
-output pico Pico.Output.Set.Color.Clear [_200,_200,_200,_255]
-output pico Pico.Output.Clear
-output pico Pico.Output.Set.Auto _0
-
-spawn {
-    await spawn level ()
-
-    loop {
-        var opt = await spawn main_menu ()
-        ifs {
-            opt ? Story     { await spawn level () }
-            opt ? Editor    { await spawn menu_button [[_0,_0], _("Editor")   ] }
-            opt ? Levelsets { await spawn menu_button [[_0,_0], _("Levelsets")] }
-            opt ? Options   { await spawn menu_button [[_0,_0], _("Options")  ] }
-            opt ? Exit      { native _(exit(0);) }
+        while true {
+            var opt = await spawn Main_Menu ()
+            ifs opt {
+                == :Menu.Story     -> await spawn Level ()
+                == :Menu.Editor    -> await spawn Menu_Button(0,0, "Editor")
+                == :Menu.Levelsets -> await spawn Menu_Button(0,0, "Levelsets")
+                == :Menu.Options   -> await spawn Menu_Button(0,0, "Options")
+                == :Menu.Exit      -> throw(:exit)
+            }
         }
     }
-}
 
-call pico_loop ()
+    pico_loop ()
+}
