@@ -28,13 +28,11 @@ task Pingu (pos) {
             set spd.1 = 0
         }
         spawn Sprite(pos, 8, "data/images/faller.png")
-println(pos, pos.1)
         every :frame {
-println(pos, pos.1)
             if pos.1 < -200 {
                 throw(:ret)
             }
-            set spd.y = spd.y + ((evt.0*gravity) / 1000)
+            set spd.1 = spd.1 + ((evt.0*gravity) / 1000)
         }
     }
 
@@ -59,9 +57,7 @@ println(pos, pos.1)
     }
 
     every :frame {
-        set pos.0 = pos.0 + (evt.0*spd.x)
-        set pos.1 = pos.1 + (evt.0*spd.y)
+        set pos.0 = pos.0 + (evt.0*spd.0)
+        set pos.1 = pos.1 + (evt.0*spd.1)
     }
 }
-
-
