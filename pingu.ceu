@@ -41,7 +41,7 @@ task Pingu (pos) {
             do {
                 set spd.0 = 0.05
                 spawn Sprite(pos, 8, "data/images/right.png")
-                await (evt is :frame) and (pos.0 >= 300)
+                await (evt is :frame) and (pos.0 >= 320)
             }
             do {
                 set spd.0 = -0.05
