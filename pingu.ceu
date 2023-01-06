@@ -1,6 +1,6 @@
 var gravity = -0.2
 
-task Sprite (pos, n, path) {
+task Sprite (pos, n, path) :awakes {
     var sz = pico_state_get_size_image(path)
     var w = sz.0 / n
     var h = sz.1
@@ -20,10 +20,10 @@ task Sprite (pos, n, path) {
     }
 }
 
-task Pingu (pos) {
+task Pingu (pos) :awakes {
     var spd = [0,0]
 
-    task Faller () { {:ret}
+    task Faller () :awakes { {:ret}
         defer {
             set spd.1 = 0
         }
@@ -36,7 +36,7 @@ task Pingu (pos) {
         }
     }
 
-    task Walker () {
+    task Walker () :awakes {
         while true {
             do {
                 set spd.0 = 0.05

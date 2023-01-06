@@ -8,9 +8,10 @@ type Tile = [pos:Point, path:_(char*)] + <
 var tiles = ...
 ;;;
 
-task Level () {
+task Level () :awakes {
     var pingus = coroutines()
     every 1s {
+        println(`:number ceu_mem->pingus.Dyn->Bcast.Coros.cur`)
         spawn in pingus, Pingu([0,200])
     }
 }

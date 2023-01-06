@@ -1,4 +1,4 @@
-task Menu_Button (x,y, tit) {
+task Menu_Button (x,y, tit) :awakes {
     var size = pico_state_get_size_image("data/images/menuitem.png")
     spawn {
         every :draw {
@@ -11,7 +11,7 @@ task Menu_Button (x,y, tit) {
           pico_point_vs_rect?([evt.0,evt.1], [x,y,size.0,size.1])
 }
 
-task Main_Menu () {
+task Main_Menu () :awakes {
     paror {
         await spawn Menu_Button(-125,   35, "Story")
         :Menu.Story
