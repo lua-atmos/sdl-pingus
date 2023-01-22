@@ -1,52 +1,51 @@
 var gravity = -0.2
 
-task Sprite (pos, n, path) :awakes {
-    var sz = pico_state_get_size_image(path)
-    var w = sz.0 / n
-    var h = sz.1
+task Sprite (pos:XY, n, path) {
+    var dim  :WH = pico-state-get-size-image(path)
+    var dim' :WH = [dim.w/n, dim.h]
 
     var i
     par {
         set i = 0
-        every 25ms {
-            set i = (i+w) % sz.0
+        every 25:ms {
+            set i = (i+dim'.w) % dim.w
         }
     } with {
-        every :draw {
-            pico_state_set_image_crop(i,0, w,h)
-            pico_state_set_size_image(w,h)
-            pico_output_draw_image(pos.0, pos.1, path)
+        every :Pico.Draw {
+            pico-state-set-image-crop([[i,0], dim'])
+            pico-state-set-size-image(dim')
+            pico-output-draw-image(pos, path)
         }
     }
 }
 
-task Pingu (pos) :awakes {
-    var spd = [0,0]
+task Pingu (pos :XY) {
+    var spd :XY = [0,0]
 
-    task Faller () :awakes { {:ret}
+    task Faller () { {:ret}
         defer {
-            set spd.1 = 0
+            set spd.y = 0
         }
         spawn Sprite(pos, 8, "data/images/faller.png")
-        every :frame {
-            if pos.1 < -200 {
+        every :Pico.Frame {
+            if pos.y < -200 {
                 throw(:ret)
             }
-            set spd.1 = spd.1 + ((evt.0*gravity) / 1000)
+            set spd.y = spd.y + ((evt.ms*gravity) / 1000)
         }
     }
 
-    task Walker () :awakes {
+    task Walker () {
         while true {
             do {
-                set spd.0 = 0.05
+                set spd.x = 0.05
                 spawn Sprite(pos, 8, "data/images/right.png")
-                await (evt is :frame) and (pos.0 >= 320)
+                await :Pico.Frame, (pos.x >= 320)
             }
             do {
-                set spd.0 = -0.05
+                set spd.x = -0.05
                 spawn Sprite(pos, 8, "data/images/left.png")
-                await (evt is :frame) and (pos.0 <= -320)
+                await :Pico.Frame, (pos.x <= -320)
             }
         }
     }
@@ -56,8 +55,8 @@ task Pingu (pos) :awakes {
         await spawn Walker ()
     }
 
-    every :frame {
-        set pos.0 = pos.0 + (evt.0*spd.0)
-        set pos.1 = pos.1 + (evt.0*spd.1)
+    every :Pico.Frame {
+        set pos.x = pos.x + (evt.ms*spd.x)
+        set pos.y = pos.y + (evt.ms*spd.y)
     }
 }

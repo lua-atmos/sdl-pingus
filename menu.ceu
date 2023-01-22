@@ -1,31 +1,30 @@
-task Menu_Button (x,y, tit) :awakes {
-    var size = pico_state_get_size_image("data/images/menuitem.png")
+task Menu-Button (pos:XY, tit) {
+    var dim = pico-state-get-size-image("data/images/menuitem.png")
     spawn {
-        every :draw {
-            pico_output_draw_image(x,y, "data/images/menuitem.png")
-            pico_state_set_font("data/fonts/film-cryptic/Filmcryptic.ttf", 45)
-            pico_output_draw_text(x,y, tit)
+        every :Pico.Draw {
+            pico-output-draw-image(pos, "data/images/menuitem.png")
+            pico-state-set-font("data/fonts/film-cryptic/Filmcryptic.ttf", 45)
+            pico-output-draw-text(pos, tit)
         }
     }
-    await (evt is :mousebuttondown) and
-          pico_point_vs_rect?([evt.0,evt.1], [x,y,size.0,size.1])
+    await :Pico.Mouse.Button.Dn, pico-point-vs-rect?(evt.pos, [pos,dim])
 }
 
-task Main_Menu () :awakes {
-    paror {
-        await spawn Menu_Button(-125,   35, "Story")
-        :Menu.Story
+task Main-Menu () {
+    par-or {
+        await spawn Menu-Button([-125,   35], "Story")
+        :Menu-Story
     } with {
-        await spawn Menu_Button( 125,   35, "Editor")
-        :Menu.Editor
+        await spawn Menu-Button([ 125,   35], "Editor")
+        :Menu-Editor
     } with {
-        await spawn Menu_Button(-125,  -35, "Levelsets")
-        :Menu.Levelsets
+        await spawn Menu-Button([-125,  -35], "Levelsets")
+        :Menu-Levelsets
     } with {
-        await spawn Menu_Button( 125,  -35, "Options")
-        :Menu.Options
+        await spawn Menu-Button([ 125,  -35], "Options")
+        :Menu-Options
     } with {
-        await spawn Menu_Button(   0, -105, "Exit")
-        :Menu.Exit
+        await spawn Menu-Button([   0, -105], "Exit")
+        :Menu-Exit
     }
 }
