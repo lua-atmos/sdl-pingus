@@ -13,8 +13,8 @@ pico-state-set-auto(false)
 catch :quit {
     spawn {
         ;;await spawn Level ()
-        while true {
-            var opt = await spawn Main-Menu ()
+        loop {
+            val opt = await spawn Main-Menu ()
             ifs opt {
                 is :Menu-Story     -> await spawn Level ()
                 is :Menu-Editor    -> await spawn Menu-Button([0,0], "Editor")

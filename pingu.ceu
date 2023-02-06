@@ -1,8 +1,8 @@
-var gravity = -0.2
+val G = -0.2
 
 task Sprite (pos:XY, n, path) {
-    var dim  :WH = pico-state-get-size-image(path)
-    var dim' :WH = [dim.w/n, dim.h]
+    val dim  :WH = pico-state-get-size-image(path)
+    val dim' :WH = [dim.w/n, dim.h]
 
     var i
     par {
@@ -20,7 +20,7 @@ task Sprite (pos:XY, n, path) {
 }
 
 task Pingu (pos :XY) {
-    var spd :XY = [0,0]
+    val spd :XY = [0,0]
 
     task Faller () { {:ret}
         defer {
@@ -31,12 +31,12 @@ task Pingu (pos :XY) {
             if pos.y < -200 {
                 throw(:ret)
             }
-            set spd.y = spd.y + ((evt.ms*gravity) / 1000)
+            set spd.y = spd.y + ((evt.ms*G) / 1000)
         }
     }
 
     task Walker () {
-        while true {
+        loop {
             do {
                 set spd.x = 0.05
                 spawn Sprite(pos, 8, "data/images/right.png")

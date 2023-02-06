@@ -1,5 +1,5 @@
 task Menu-Button (pos:XY, tit) {
-    var dim = pico-state-get-size-image("data/images/menuitem.png")
+    val dim = pico-state-get-size-image("data/images/menuitem.png")
     spawn {
         every :Pico.Draw {
             pico-output-draw-image(pos, "data/images/menuitem.png")

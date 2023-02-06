@@ -9,7 +9,7 @@ var tiles = ...
 ;;;
 
 task Level () {
-    var pingus = tasks()
+    val pingus = tasks()
     every 1:s {
         println(`:number ceu_mem->pingus.Dyn->Bcast.Tasks.dyns.its`)
         spawn in pingus, Pingu([0,200])
