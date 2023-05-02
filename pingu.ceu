@@ -22,17 +22,14 @@ task Sprite (pos:XY, n, path) {
 task Pingu (pos :XY) {
     val spd :XY = [0,0]
 
-    task Faller () { {:ret}
+    task Faller () {
         defer {
             set spd.y = 0
         }
         spawn Sprite(pos, 8, "data/images/faller.png")
         every :Pico.Frame {
-            if pos.y < -200 {
-                throw(:ret)
-            }
             set spd.y = spd.y + ((evt.ms*G) / 1000)
-        }
+        } until pos.y < -200
     }
 
     task Walker () {
