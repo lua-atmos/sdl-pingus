@@ -8,21 +8,19 @@ pico-state-set-size-pixel([1,1])
 pico-state-set-size([641,481])
 pico-state-set-grid(false)
 pico-state-set-color-clear([200,200,200,255])
-pico-state-set-auto(false)
 
-catch :quit {
-    spawn {
-        ;;await spawn Level ()
-        loop {
-            val opt = await spawn Main-Menu ()
-            ifs opt {
-                is? :Menu-Story     -> await spawn Level ()
-                is? :Menu-Editor    -> await spawn Menu-Button([0,0], "Editor")
-                is? :Menu-Levelsets -> await spawn Menu-Button([0,0], "Levelsets")
-                is? :Menu-Options   -> await spawn Menu-Button([0,0], "Options")
-                is? :Menu-Exit      -> throw(:quit)
-            }
+spawn {
+    ;;await spawn Level ()
+    loop {
+        val opt = await spawn Main-Menu ()
+        ifs opt {
+            is? :Menu-Story     -> await spawn Level ()
+            is? :Menu-Editor    -> await spawn Menu-Button([0,0], "Editor")
+            is? :Menu-Levelsets -> await spawn Menu-Button([0,0], "Levelsets")
+            is? :Menu-Options   -> await spawn Menu-Button([0,0], "Options")
+            is? :Menu-Exit      -> set pico-quit = true
         }
     }
-    pico-loop ()
 }
+
+pico-loop ()
