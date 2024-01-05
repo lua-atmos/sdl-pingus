@@ -7,7 +7,7 @@ task Sprite (pos:XY, n, path) {
     var i
     par {
         set i = 0
-        every 25:ms {
+        every :25:ms {
             set i = (i+dim'.w) % dim.w
         }
     } with {
@@ -28,8 +28,9 @@ task Pingu (pos :XY) {
         }
         spawn Sprite(pos, 8, "data/images/faller.png")
         every :Pico.Frame {
-            set spd.y = spd.y + ((evt.ms*G) / 1000)
-        } until pos.y < -200
+            set spd.y = spd.y + ((it.ms*G) / 1000)
+            until pos.y < -200
+        }
     }
 
     task Walker () {
@@ -37,23 +38,23 @@ task Pingu (pos :XY) {
             do {
                 set spd.x = 0.05
                 spawn Sprite(pos, 8, "data/images/right.png")
-                await :Pico.Frame, (pos.x >= 320)
+                await(:Pico.Frame => pos.x >= 320)
             }
             do {
                 set spd.x = -0.05
                 spawn Sprite(pos, 8, "data/images/left.png")
-                await :Pico.Frame, (pos.x <= -320)
+                await(:Pico.Frame => pos.x <= -320)
             }
         }
     }
 
-    spawn {
+    spawn task {
         await spawn Faller ()
         await spawn Walker ()
     }
 
     every :Pico.Frame {
-        set pos.x = pos.x + (evt.ms*spd.x)
-        set pos.y = pos.y + (evt.ms*spd.y)
+        set pos.x = pos.x + (it.ms*spd.x)
+        set pos.y = pos.y + (it.ms*spd.y)
     }
 }

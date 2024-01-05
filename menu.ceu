@@ -1,13 +1,13 @@
 task Menu-Button (pos:XY, tit) {
     val dim = pico-state-get-size-image("data/images/menuitem.png")
-    spawn {
+    spawn task {
         every :Pico.Draw {
             pico-output-draw-image(pos, "data/images/menuitem.png")
             pico-state-set-font("data/fonts/film-cryptic/Filmcryptic.ttf", 45)
             pico-output-draw-text(pos, tit)
         }
     }
-    await :Pico.Mouse.Button.Dn, pico-point-vs-rect?(evt.pos, [pos,dim])
+    await(:Pico.Mouse.Button.Dn => pico-point-vs-rect?(it.pos, [pos,dim]))
 }
 
 task Main-Menu () {

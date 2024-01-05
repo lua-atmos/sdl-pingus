@@ -9,7 +9,7 @@ pico-state-set-size([641,481])
 pico-state-set-grid(false)
 pico-state-set-color-clear([200,200,200,255])
 
-spawn {
+spawn task {
     ;;await spawn Level ()
     loop {
         val opt = await spawn Main-Menu ()
