@@ -38,17 +38,17 @@ task Pingu (pos :XY) {
             do {
                 set spd.x = 0.05
                 spawn Sprite(pos, 8, "data/images/right.png")
-                await(:Pico.Frame => pos.x >= 320)
+                await(:Pico.Frame, pos.x >= 320)
             }
             do {
                 set spd.x = -0.05
                 spawn Sprite(pos, 8, "data/images/left.png")
-                await(:Pico.Frame => pos.x <= -320)
+                await(:Pico.Frame, pos.x <= -320)
             }
         }
     }
 
-    spawn task {
+    spawn {
         await spawn Faller ()
         await spawn Walker ()
     }
