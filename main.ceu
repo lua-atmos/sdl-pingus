@@ -13,12 +13,12 @@ spawn {
     ;;await spawn Level ()
     loop {
         val opt = await spawn Main-Menu ()
-        ifs opt {
-            is? :Menu-Story     => await spawn Level ()
-            is? :Menu-Editor    => await spawn Menu-Button([0,0], "Editor")
-            is? :Menu-Levelsets => await spawn Menu-Button([0,0], "Levelsets")
-            is? :Menu-Options   => await spawn Menu-Button([0,0], "Options")
-            is? :Menu-Exit      => pico-quit()
+        match opt {
+            :Menu-Story     => await spawn Level ()
+            :Menu-Editor    => await spawn Menu-Button([0,0], "Editor")
+            :Menu-Levelsets => await spawn Menu-Button([0,0], "Levelsets")
+            :Menu-Options   => await spawn Menu-Button([0,0], "Options")
+            :Menu-Exit      => pico-quit()
         }
     }
 }
