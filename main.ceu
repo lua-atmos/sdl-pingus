@@ -3,11 +3,11 @@
 ^["pingu.ceu"]
 ^["level.ceu"]
 
-pico-state-set-title("Pingus")
-pico-state-set-size-pixel([1,1])
-pico-state-set-size([641,481])
-pico-state-set-grid(false)
-pico-state-set-color-clear([200,200,200,255])
+pico.state.set.title        <- "Pingus"
+pico.state.set.size.pixel   <- [1,1]
+pico.state.set.size.window  <- [641,481]
+pico.state.set.grid         <- false
+pico.state.set.color.clear  <- [200,200,200,255]
 
 spawn {
     ;;await spawn Level ()
@@ -18,9 +18,9 @@ spawn {
             :Menu-Editor    => await spawn Menu-Button([0,0], "Editor")
             :Menu-Levelsets => await spawn Menu-Button([0,0], "Levelsets")
             :Menu-Options   => await spawn Menu-Button([0,0], "Options")
-            :Menu-Exit      => pico-quit()
+            :Menu-Exit      => pico.quit()
         }
     }
 }
 
-pico-loop ()
+pico.loop ()

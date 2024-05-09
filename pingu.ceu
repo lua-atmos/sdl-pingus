@@ -1,7 +1,7 @@
 val G = -0.2
 
 task Sprite (pos:XY, n, path) {
-    val dim  :WH = pico-state-get-size-image(path)
+    val dim  :WH = pico.state.get.size.image(path)
     val dim' :WH = [dim.w/n, dim.h]
 
     var i
@@ -12,9 +12,9 @@ task Sprite (pos:XY, n, path) {
         }
     } with {
         every :Pico.Draw {
-            pico-state-set-image-crop([[i,0], dim'])
-            pico-state-set-size-image(dim')
-            pico-output-draw-image(pos, path)
+            pico.state.set.image-crop([[i,0], dim'])
+            pico.state.set.size.image(dim')
+            pico.output.draw.image(pos, path)
         }
     }
 }
