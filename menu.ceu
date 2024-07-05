@@ -7,7 +7,7 @@ task Menu-Button (pos:XY, tit) {
             pico.output.draw.text(pos, tit)
         }
     }
-    await(:Pico.Mouse.Button.Dn, pico.point-vs-rect?(it.pos, [pos,dim]))
+    await(:Pico.Mouse.Button.Dn | pico.point-vs-rect?(it.pos, [pos,dim]))
 }
 
 task Main-Menu () {
