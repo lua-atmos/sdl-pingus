@@ -5,8 +5,13 @@
 
 pico.set.title       <- "Pingus"
 pico.set.size        <- [640,480]
-pico.set.grid        <- false
 pico.set.color.clear <- [200,200,200,255]
+
+spawn {
+    every <1:s> {
+        println(pico.v.CPU)
+    }
+}
 
 spawn {
     ;;await spawn Level ()
