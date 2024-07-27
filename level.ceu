@@ -12,6 +12,7 @@ task Level () {
     val pingus = tasks()
     every <1:s> {
         ;;println(`:number ceu_mem->pingus.Dyn->Bcast.Tasks.dyns.its`)
-        spawn Pingu([0,200]) in pingus
+        val pos = pico.pct-to-pos(1/2, 1/4)
+        spawn Pingu(pos) in pingus
     }
 }

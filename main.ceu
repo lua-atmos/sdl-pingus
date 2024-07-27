@@ -3,21 +3,21 @@
 ^["pingu.ceu"]
 ^["level.ceu"]
 
-pico.state.set.title        <- "Pingus"
-pico.state.set.size.pixel   <- [1,1]
-pico.state.set.size.window  <- [641,481]
-pico.state.set.grid         <- false
-pico.state.set.color.clear  <- [200,200,200,255]
+pico.set.title       <- "Pingus"
+pico.set.size        <- [640,480]
+pico.set.grid        <- false
+pico.set.color.clear <- [200,200,200,255]
 
 spawn {
     ;;await spawn Level ()
     loop {
         val opt = await spawn Main-Menu ()
+        val cnt = pico.pct-to-pos(1/2, 1/2)
         match opt {
             :Menu-Story     => await spawn Level ()
-            :Menu-Editor    => await spawn Menu-Button([0,0], "Editor")
-            :Menu-Levelsets => await spawn Menu-Button([0,0], "Levelsets")
-            :Menu-Options   => await spawn Menu-Button([0,0], "Options")
+            :Menu-Editor    => await spawn Menu-Button(cnt, "Editor")
+            :Menu-Levelsets => await spawn Menu-Button(cnt, "Levelsets")
+            :Menu-Options   => await spawn Menu-Button(cnt, "Options")
             :Menu-Exit      => pico.quit()
         }
     }

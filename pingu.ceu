@@ -1,7 +1,7 @@
-val G = -0.2
+val G = 0.2
 
 task Sprite (pos:XY, n, path) {
-    val dim  :WH = pico.state.get.size.image(path)
+    val dim  :WH = pico.get.image.size(path)
     val dim' :WH = [dim.w/n, dim.h]
 
     var i
@@ -12,8 +12,8 @@ task Sprite (pos:XY, n, path) {
         }
     } with {
         every :Pico.Draw {
-            pico.state.set.image-crop([[i,0], dim'])
-            pico.state.set.size.image(dim')
+            pico.set.image.crop([[i,0], dim'])
+            pico.set.image.size(dim')
             pico.output.draw.image(pos, path)
         }
     }
@@ -29,7 +29,7 @@ task Pingu (pos :XY) {
         spawn Sprite(pos, 8, "data/images/faller.png")
         every :Pico.Frame {
             set spd.y = spd.y + ((it.ms*G) / 1000)
-            until pos.y < -200
+            until pos.y > 400
         }
     }
 
@@ -38,12 +38,12 @@ task Pingu (pos :XY) {
             do {
                 set spd.x = 0.05
                 spawn Sprite(pos, 8, "data/images/right.png")
-                await(:Pico.Frame | pos.x >= 320)
+                await(:Pico.Frame | pos.x > 600)
             }
             do {
                 set spd.x = -0.05
                 spawn Sprite(pos, 8, "data/images/left.png")
-                await(:Pico.Frame | pos.x <= -320)
+                await(:Pico.Frame | pos.x < 40)
             }
         }
     }

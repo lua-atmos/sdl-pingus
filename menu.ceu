@@ -1,9 +1,9 @@
 task Menu-Button (pos:XY, tit) {
-    val dim = pico.state.get.size.image("data/images/menuitem.png")
+    val dim = pico.get.image.size("data/images/menuitem.png")
     spawn {
         every :Pico.Draw {
             pico.output.draw.image(pos, "data/images/menuitem.png")
-            pico.state.set.font("data/fonts/film-cryptic/Filmcryptic.ttf", 45)
+            pico.set.font("data/fonts/film-cryptic/Filmcryptic.ttf", 45)
             pico.output.draw.text(pos, tit)
         }
     }
@@ -12,19 +12,19 @@ task Menu-Button (pos:XY, tit) {
 
 task Main-Menu () {
     par-or {
-        await spawn Menu-Button([-125,   35], "Story")
+        await spawn Menu-Button(pico.pct-to-pos(1/4, 1/4), "Story")
         :Menu-Story
     } with {
-        await spawn Menu-Button([ 125,   35], "Editor")
+        await spawn Menu-Button(pico.pct-to-pos(3/4, 1/4), "Editor")
         :Menu-Editor
     } with {
-        await spawn Menu-Button([-125,  -35], "Levelsets")
+        await spawn Menu-Button(pico.pct-to-pos(1/4, 2/4), "Levelsets")
         :Menu-Levelsets
     } with {
-        await spawn Menu-Button([ 125,  -35], "Options")
+        await spawn Menu-Button(pico.pct-to-pos(3/4, 2/4), "Options")
         :Menu-Options
     } with {
-        await spawn Menu-Button([   0, -105], "Exit")
+        await spawn Menu-Button(pico.pct-to-pos(1/2, 3/4), "Exit")
         :Menu-Exit
     }
 }
