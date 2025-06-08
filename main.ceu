@@ -1,31 +1,69 @@
-^["@/pico/pico.ceu"]
-^["menu.ceu"]
-^["pingu.ceu"]
-^["level.ceu"]
+;;^["menu.ceu"]
+;;^["pingu.ceu"]
+;;^["level.ceu"]
 
-pico.set.title       <- "Pingus"
-pico.set.size        <- [640,480]
-pico.set.color.clear <- [200,200,200,255]
+val SDL = require "SDL"
+val IMG = require "SDL.image"
+
+defer {
+    IMG.quit()
+    SDL.quit()
+}
+
+val WIN = SDL.createWindow @{
+	title  = "Pingus",
+	width  = 640,
+	height = 480,
+    flags  = @{ SDL.flags.OpenGL },
+} -> assert
+val REN = SDL.createRenderer(WIN,-1) -> assert
+
+;;pico.set.color.clear <- [200,200,200,255]
 
 spawn {
-    every <1:s> {
-        println(pico.v.CPU)
+    every @1 {
+        ;;println(pico.v.CPU)
     }
 }
 
 spawn {
     ;;await spawn Level ()
     loop {
-        val opt = await spawn Main-Menu ()
+        val opt = await Main_Menu ()
         val cnt = pico.pct-to-pos(1/2, 1/2)
         match opt {
-            :Menu-Story     => await spawn Level ()
-            :Menu-Editor    => await spawn Menu-Button(cnt, "Editor")
-            :Menu-Levelsets => await spawn Menu-Button(cnt, "Levelsets")
-            :Menu-Options   => await spawn Menu-Button(cnt, "Options")
-            :Menu-Exit      => pico.quit()
+            :Menu_Story     => await spawn Level ()
+            :Menu_Editor    => await spawn Menu-Button(cnt, "Editor")
+            :Menu_Levelsets => await spawn Menu-Button(cnt, "Levelsets")
+            :Menu_Options   => await spawn Menu-Button(cnt, "Options")
+            :Menu_Exit      => SDL.quit()
         }
     }
 }
 
-pico.loop ()
+val MS_PER_FRAME = 40
+var old = SDL.getTicks() - MS_PER_FRAME
+var ms = 0
+loop {
+	val e = SDL.waitEvent(ms)
+    if e == nil {
+        val cur = SDL.getTicks()
+        if (cur - old) >= MS_PER_FRAME {
+            set old = cur
+            emit(:clock, MS_PER_FRAME)
+            emit(:Pico.Frame, MS_PER_FRAME)
+        }
+    } else {
+        match e.type {
+            SDL.event.Quit            => break()
+            SDL.event.MouseButtonUp   => emit(:Pico.Mouse.Button.Up(e))
+            SDL.event.MouseButtonDown => emit(:Pico.Mouse.Button.Dn(e))
+            SDL.event.MouseMotion     => emit(:Pico.Mouse.Motion(e))
+            SDL.event.KeyDown => {
+                set e.name = SDL.getKeyName(e.keysym.sym)
+                emit(:Pico.Key.Dn(e))
+            }
+        }
+    }
+    emit(:Pico.Draw)
+}

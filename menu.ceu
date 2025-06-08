@@ -1,4 +1,4 @@
-task Menu-Button (pos:XY, tit) {
+func Menu_Button (pos:XY, tit) {
     val dim = pico.get.image.size("data/images/menuitem.png")
     spawn {
         every :Pico.Draw {
@@ -10,21 +10,21 @@ task Menu-Button (pos:XY, tit) {
     await(:Pico.Mouse.Button.Dn | pico.point-vs-rect?(it.pos, [pos,dim]))
 }
 
-task Main-Menu () {
-    par-or {
-        await spawn Menu-Button(pico.pct-to-pos(1/4, 1/4), "Story")
-        :Menu-Story
+func Main_Menu () {
+    par_or {
+        await spawn Menu_Button(pico.pct-to-pos(1/4, 1/4), "Story")
+        :Menu_Story
     } with {
-        await spawn Menu-Button(pico.pct-to-pos(3/4, 1/4), "Editor")
-        :Menu-Editor
+        await spawn Menu_Button(pico.pct-to-pos(3/4, 1/4), "Editor")
+        :Menu_Editor
     } with {
-        await spawn Menu-Button(pico.pct-to-pos(1/4, 2/4), "Levelsets")
-        :Menu-Levelsets
+        await spawn Menu_Button(pico.pct-to-pos(1/4, 2/4), "Levelsets")
+        :Menu_Levelsets
     } with {
-        await spawn Menu-Button(pico.pct-to-pos(3/4, 2/4), "Options")
-        :Menu-Options
+        await spawn Menu_Button(pico.pct-to-pos(3/4, 2/4), "Options")
+        :Menu_Options
     } with {
-        await spawn Menu-Button(pico.pct-to-pos(1/2, 3/4), "Exit")
-        :Menu-Exit
+        await spawn Menu_Button(pico.pct-to-pos(1/2, 3/4), "Exit")
+        :Menu_Exit
     }
 }
