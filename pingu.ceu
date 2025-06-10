@@ -1,60 +1,66 @@
 val G = 0.2
 
-task Sprite (pos:XY, n, path) {
-    val dim  :WH = pico.get.image.size(path)
-    val dim' :WH = [dim.w/n, dim.h]
+func Sprite (pos, n, path) {
+    val img = ren where {
+        sfc = IMG.load(path) -> assert
+        ren = REN::createTextureFromSurface(sfc) -> assert
+    }
+    val _,_,W,h = img::query()
+    val w = W / n --> math.floor
 
     var i
     par {
         set i = 0
-        every <25:ms> {
-            set i = (i+dim'.w) % dim.w
+        every @.25 {
+            set i = (i+w) % W
         }
     } with {
         every :Pico.Draw {
-            pico.set.image.crop([[i,0], dim'])
-            pico.set.image.size(dim')
-            pico.output.draw.image(pos, path)
+            val rect = @{x=pos.x, y=pos.y, w=w, h=h}
+            val crop = @{ x=i, y=0, w=w, h=h }
+            REN::copy(img, crop, rect)
         }
     }
 }
 
-task Pingu (pos :XY) {
-    val spd :XY = [0,0]
+func Pingu (pos) {
+    val spd = @{x=0,y=0}
 
-    task Faller () {
+    val Faller = func () {
         defer {
             set spd.y = 0
         }
         spawn Sprite(pos, 8, "data/images/faller.png")
         every :Pico.Frame {
-            set spd.y = spd.y + ((it.ms*G) / 1000)
-            until pos.y > 400
+            set spd.y = spd.y + ((evt*G) / 1000)
+            until (pos.y > 400)
         }
     }
 
-    task Walker () {
+    val Walker = func () {
         loop {
             do {
                 set spd.x = 0.05
                 spawn Sprite(pos, 8, "data/images/right.png")
-                await(:Pico.Frame | pos.x > 600)
+                await(:Pico.Frame, pos.x > 600)
             }
             do {
                 set spd.x = -0.05
                 spawn Sprite(pos, 8, "data/images/left.png")
-                await(:Pico.Frame | pos.x < 40)
+                await(:Pico.Frame, pos.x < 40)
             }
         }
     }
 
     spawn {
-        await spawn Faller ()
-        await spawn Walker ()
+        await Faller ()
+        await Walker ()
     }
 
     every :Pico.Frame {
-        set pos.x = pos.x + (it.ms*spd.x)
-        set pos.y = pos.y + (it.ms*spd.y)
+        set pos.x = pos.x + (evt*spd.x) --> math.floor
+        set pos.y = pos.y + (evt*spd.y) --> math.floor
     }
 }
+
+return <- Pingu

@@ -1,3 +1,6 @@
+val pico  = require "pico"
+val Pingu = require "pingu"
+
 ;;;
 type Tile = [pos:Point, path:_(char*)] + <
     Background = ()
@@ -8,11 +11,14 @@ type Tile = [pos:Point, path:_(char*)] + <
 var tiles = ...
 ;;;
 
-task Level () {
-    val pingus = tasks()
-    every <1:s> {
+func Level () {
+    pin pingus = tasks()
+    every @1 {
         ;;println(`:number ceu_mem->pingus.Dyn->Bcast.Tasks.dyns.its`)
-        val pos = pico.pct-to-pos(1/2, 1/4)
-        spawn Pingu(drop(pos)) in pingus
+        val pos = pico.pct_to_pos(50, 25)
+        spawn [pingus] Pingu(pos)
+        ;;await(false)
     }
 }
+
+return <- Level

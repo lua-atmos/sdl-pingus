@@ -1,30 +1,40 @@
-func Menu_Button (pos:XY, tit) {
-    val dim = pico.get.image.size("data/images/menuitem.png")
+val pico = require "pico"
+
+val Menu = @{}
+
+func Menu.Button (pos, tit) {
+    val img = ren where {
+        sfc = IMG.load("data/images/menuitem.png") -> assert
+        ren = REN::createTextureFromSurface(sfc) -> assert
+    }
+    val _,_,w,h = img::query()
+    val rect = @{x=pos.x-(w/2), y=pos.y-(h/2), w=w, h=h}
     spawn {
         every :Pico.Draw {
-            pico.output.draw.image(pos, "data/images/menuitem.png")
-            pico.set.font("data/fonts/film-cryptic/Filmcryptic.ttf", 45)
-            pico.output.draw.text(pos, tit)
+            REN::copy(img, nil, rect)
+            pico.write(FNT, tit, rect)
         }
     }
-    await(:Pico.Mouse.Button.Dn | pico.point-vs-rect?(it.pos, [pos,dim]))
+    await(:Pico.Mouse.Button.Dn, pico.point_vs_rect(evt, rect))
 }
 
-func Main_Menu () {
+func Menu.Main () {
     par_or {
-        await spawn Menu_Button(pico.pct-to-pos(1/4, 1/4), "Story")
+        await Menu.Button(pico.pct_to_pos(25,25), "Story")
         :Menu_Story
     } with {
-        await spawn Menu_Button(pico.pct-to-pos(3/4, 1/4), "Editor")
+        await Menu.Button(pico.pct_to_pos(75,25), "Editor")
         :Menu_Editor
     } with {
-        await spawn Menu_Button(pico.pct-to-pos(1/4, 2/4), "Levelsets")
+        await Menu.Button(pico.pct_to_pos(25,50), "Levelsets")
         :Menu_Levelsets
     } with {
-        await spawn Menu_Button(pico.pct-to-pos(3/4, 2/4), "Options")
+        await Menu.Button(pico.pct_to_pos(75,50), "Options")
         :Menu_Options
     } with {
-        await spawn Menu_Button(pico.pct-to-pos(1/2, 3/4), "Exit")
+        await Menu.Button(pico.pct_to_pos(50,75), "Exit")
         :Menu_Exit
     }
 }
+
+return(Menu)
