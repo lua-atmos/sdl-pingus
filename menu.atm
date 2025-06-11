@@ -7,15 +7,19 @@ func Menu.Button (pos, tit) {
         sfc = IMG.load("data/images/menuitem.png") -> assert
         ren = REN::createTextureFromSurface(sfc) -> assert
     }
-    val _,_,w,h = img::query()
-    val rect = @{x=pos.x-(w/2), y=pos.y-(h/2), w=w, h=h}
+    val a = @{x=pos.x-(w/2)-->math.floor, y=pos.y-(h/2)-->math.floor, w=w, h=h} where {
+        _,_,w,h = img::query()
+    }
+    val b = @{x=pos.x-(w/2)-->math.floor, y=pos.y-(h/2)-->math.floor} where {
+        w,h = FNT::sizeText(tit)
+    }
     spawn {
         every :Pico.Draw {
-            REN::copy(img, nil, rect)
-            pico.write(FNT, tit, rect)
+            REN::copy(img, nil, a)
+            pico.write(FNT, tit, b)
         }
     }
-    await(:Pico.Mouse.Button.Dn, pico.point_vs_rect(evt, rect))
+    await(:Pico.Mouse.Button.Dn, pico.point_vs_rect(evt, a))
 }
 
 func Menu.Main () {
