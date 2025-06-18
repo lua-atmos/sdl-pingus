@@ -1,40 +1,44 @@
-val pico = require "pico"
+local SDL = require "SDL"
+local IMG = require "SDL.image"
+local sdl = require "atmos.env.sdl"
 
-val Menu = @{}
+local PP  = sdl.pct_to_pos
 
-func Menu.Button (pos, tit) {
-    val img,dim = (ren,dim) where {
-        sfc = IMG.load("data/images/menuitem.png") -> assert
-        ren = REN::createTextureFromSurface(sfc) -> assert
-        dim = totable('w','h',sfc::getSize())
-    }
-    val rect = pico.rect(pos, dim)
-    spawn {
-        every :Pico.Draw {
-            REN::copy(img, nil, rect)
-            pico.write(FNT, tit, pos)
-        }
-    }
-    await(:Pico.Mouse.Button.Dn, pico.point_vs_rect(evt, rect))
-}
+local Menu = {}
 
-func Menu.Main () {
-    par_or {
-        await Menu.Button(pico.pct_to_pos(25,25), "Story")
-        :Menu_Story
-    } with {
-        await Menu.Button(pico.pct_to_pos(75,25), "Editor")
-        :Menu_Editor
-    } with {
-        await Menu.Button(pico.pct_to_pos(25,50), "Levelsets")
-        :Menu_Levelsets
-    } with {
-        await Menu.Button(pico.pct_to_pos(75,50), "Options")
-        :Menu_Options
-    } with {
-        await Menu.Button(pico.pct_to_pos(50,75), "Exit")
-        :Menu_Exit
-    }
-}
+function Menu.Button (pos, tit)
+    local sfc = assert(IMG.load("data/images/menuitem.png"))
+    local img = assert(REN:createTextureFromSurface(sfc))
+    local dim = totable('w', 'h', sfc:getSize())
+    local rect = sdl.rect(pos, dim)
+    spawn(function ()
+        every('SDL.Draw', function ()
+            REN:copy(img, nil, rect)
+            sdl.write(FNT, tit, pos)
+        end)
+    end)
+    await(SDL.event.MouseButtonDown, function (e)
+        return sdl.point_vs_rect(e, rect)
+    end)
+end
 
-return(Menu)
+function Menu.Main ()
+    return par_or(function ()
+        await(spawn(Menu.Button, PP(25,25), "Story"))
+        return 'Menu.Story'
+    end, function ()
+        await(spawn(Menu.Button, PP(75,25), "Editor"))
+        return 'Menu.Editor'
+    end, function ()
+        await(spawn(Menu.Button, PP(25,50), "Levelsets"))
+        return 'Menu.Levelsets'
+    end, function ()
+        await(spawn(Menu.Button, PP(75,50), "Options"))
+        return 'Menu.Options'
+    end, function ()
+        await(spawn(Menu.Button, PP(50,75), "Exit"))
+        return 'Menu.Exit'
+    end)
+end
+
+return Menu

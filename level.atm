@@ -1,7 +1,7 @@
-val pico  = require "pico"
-val Pingu = require "pingu"
+local sdl = require "atmos.env.sdl"
+local Pingu = require "pingu"
 
-;;;
+--[[
 type Tile = [pos:Point, path:_(char*)] + <
     Background = ()
     Liquid     = ()
@@ -9,16 +9,16 @@ type Tile = [pos:Point, path:_(char*)] + <
     Ground     = ()
 >
 var tiles = ...
-;;;
+]]
 
-func Level () {
-    pin pingus = tasks()
-    every @1 {
-        ;;println(`:number ceu_mem->pingus.Dyn->Bcast.Tasks.dyns.its`)
-        val pos = pico.pct_to_pos(50, 25)
-        spawn [pingus] Pingu(pos)
-        ;;await(false)
-    }
-}
+function Level ()
+    local pingus <close> = tasks()
+    every(clock{s=1}, function ()
+        print(#pingus._.dns)
+        local pos = sdl.pct_to_pos(50, 25)
+        spawn_in(pingus, Pingu, pos)
+        --await(false)
+    end)
+end
 
-return <- Level
+return Level
