@@ -2,7 +2,6 @@ local SDL = require "SDL"
 local IMG = require "SDL.image"
 local TTF = require "SDL.ttf"
 
-require "atmos"
 local sdl = require "atmos.env.sdl"
 
 local Menu  = require "menu"
@@ -36,7 +35,8 @@ spawn {
 }
 ]]
 
-spawn(function ()
+sdl.ren = REN
+call(function ()
     --await spawn Level ()
     while true do
         local opt = await(spawn(Menu.Main))
@@ -51,11 +51,11 @@ spawn(function ()
         elseif opt == 'Menu.Options' then
             await(spawn(Menu.Button, cnt, "Options"))
         elseif opt == 'Menu.Exit' then
-            sdl.quit()
+print(1+true)
+            --SDL.quit()
+            break
         else
             error "bug found"
         end
     end
 end)
-
-sdl.loop(REN)

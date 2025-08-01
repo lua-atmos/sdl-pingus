@@ -15,7 +15,7 @@ function Sprite (pos, n, path)
             i = (i+w) % W
         end)
     end, function ()
-        every('SDL.Draw', function ()
+        every('sdl.draw', function ()
             local rect = {x=pos.x, y=pos.y, w=w, h=h}
             local crop = { x=i, y=0, w=w, h=h }
             REN:copy(img, crop, rect)
@@ -32,7 +32,7 @@ function Pingu (pos)
         end)
         spawn(Sprite, pos, 8, "data/images/faller.png")
         catch('out', function ()
-            every('step', function (_,ms)
+            every('sdl.step', function (_,ms)
                 spd.y = spd.y + ((ms*G) / 1000)
                 if pos.y > 400 then
                     throw 'out'
@@ -65,7 +65,7 @@ function Pingu (pos)
         await(spawn(Walker))
     end)
 
-    every('step', function (_,ms)
+    every('sdl.step', function (_,ms)
         pos.x = math.floor(pos.x + (ms*spd.x))
         pos.y = math.floor(pos.y + (ms*spd.y))
     end)
