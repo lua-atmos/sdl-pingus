@@ -51,7 +51,6 @@ call(function ()
         elseif opt == 'Menu.Options' then
             await(spawn(Menu.Button, cnt, "Options"))
         elseif opt == 'Menu.Exit' then
-print(1+true)
             --SDL.quit()
             break
         else
