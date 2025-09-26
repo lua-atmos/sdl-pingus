@@ -1,5 +1,6 @@
-# pico-ceu-pingus
+# sdl-pingus
 
 ```
-$ ceu --lib=pico main.ceu
+git checkout v0.3
+lua5.4 main.lua
 ```
