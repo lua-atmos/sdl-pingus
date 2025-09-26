@@ -37,7 +37,7 @@ spawn {
 
 sdl.ren = REN
 call(function ()
-    --await spawn Level ()
+    --await(spawn(Level))
     while true do
         local opt = await(spawn(Menu.Main))
         local cnt = PP(50, 50)
@@ -51,8 +51,7 @@ call(function ()
         elseif opt == 'Menu.Options' then
             await(spawn(Menu.Button, cnt, "Options"))
         elseif opt == 'Menu.Exit' then
-print(1+true)
-            --SDL.quit()
+            SDL.quit()
             break
         else
             error "bug found"
