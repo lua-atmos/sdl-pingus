@@ -32,7 +32,7 @@ function Pingu (pos)
         end)
         spawn(Sprite, pos, 8, "data/images/faller.png")
         catch('out', function ()
-            every('sdl.step', function (_,ms)
+            every('clock', function (_,ms)
                 spd.y = spd.y + ((ms*G) / 1000)
                 if pos.y > 400 then
                     throw 'out'
@@ -65,7 +65,7 @@ function Pingu (pos)
         await(spawn(Walker))
     end)
 
-    every('sdl.step', function (_,ms)
+    every('clock', function (_,ms)
         pos.x = math.floor(pos.x + (ms*spd.x))
         pos.y = math.floor(pos.y + (ms*spd.y))
     end)
