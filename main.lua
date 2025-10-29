@@ -1,19 +1,11 @@
-local SDL = require "SDL"
-local IMG = require "SDL.image"
-local TTF = require "SDL.ttf"
-
 local sdl = require "atmos.env.sdl"
+local SDL = require "SDL"
+local TTF = require "SDL.ttf"
 
 local Menu  = require "menu"
 local Level = require "level"
 
 local PP = sdl.pct_to_pos
-
-assert(TTF.init())
-local _ <close> = defer(function ()
-    TTF.quit()
-    SDL.quit()
-end)
 
 WIN = assert(SDL.createWindow {
 	title  = "Pingus",
