@@ -7,13 +7,12 @@ local Level = require "level"
 
 local PP = sdl.pct_to_pos
 
-WIN = assert(SDL.createWindow {
+_,REN = sdl.window {
 	title  = "Pingus",
 	width  = 640,
 	height = 480,
     flags  = { SDL.flags.OpenGL },
-})
-REN = assert(SDL.createRenderer(WIN,-1))
+}
 
 FNT = assert(TTF.open("data/fonts/film-cryptic/Filmcryptic.ttf", 45))
 
@@ -27,7 +26,6 @@ spawn {
 }
 ]]
 
-sdl.ren = REN
 call(function ()
     --await(spawn(Level))
     while true do
