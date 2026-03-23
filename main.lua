@@ -14,8 +14,6 @@ _,REN = sdl.window {
     flags  = { SDL.flags.OpenGL },
 }
 
-FNT = assert(TTF.open("data/fonts/film-cryptic/Filmcryptic.ttf", 45))
-
 --pico.set.color.clear <- [200,200,200,255]
 
 --[[
@@ -26,7 +24,9 @@ spawn {
 }
 ]]
 
-call(function ()
+loop(function ()
+    FNT = assert(TTF.open("data/fonts/film-cryptic/Filmcryptic.ttf", 45))
+
     --await(spawn(Level))
     while true do
         local opt = await(spawn(Menu.Main))
