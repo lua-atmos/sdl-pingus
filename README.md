@@ -10,13 +10,13 @@ A [Pingus][pingus] clone built with [Atmos][atmos] and
 # Install
 
 ```
-sudo luarocks --lua-version=5.4 install atmos 0.6
-sudo luarocks --lua-version=5.4 install atmos-env-sdl 0.1
+sudo luarocks --lua-version=5.4 install atmos 0.7
+sudo luarocks --lua-version=5.4 install atmos-env-sdl 0.2
 ```
 
 # Run
 
 ```
-git checkout v0.4
+git checkout v0.5
 lua5.4 main.lua
 ```

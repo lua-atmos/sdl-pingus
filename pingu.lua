@@ -12,7 +12,7 @@ function Sprite (pos, n, path)
     local i
     par(function ()
         i = 0
-        every(clock{ms=50}, function ()
+        every(50*_ms_, function ()
             i = (i+w) % W
         end)
     end, function ()
@@ -33,7 +33,8 @@ function Pingu (pos)
         end)
         spawn(Sprite, pos, 8, "data/images/faller.png")
         catch('out', function ()
-            every('clock', function (_,ms)
+            every('clock', function (us)
+                local ms = us / 1000
                 spd.y = spd.y + ((ms*G) / 1000)
                 if pos.y > 400 then
                     throw 'out'
@@ -66,7 +67,8 @@ function Pingu (pos)
         await(spawn(Walker))
     end)
 
-    every('clock', function (_,ms)
+    every('clock', function (us)
+        local ms = us / 1000
         pos.x = pos.x + (ms*spd.x)
         pos.y = pos.y + (ms*spd.y)
     end)

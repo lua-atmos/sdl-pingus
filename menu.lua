@@ -17,9 +17,9 @@ function Menu.Button (pos, tit)
             sdl.write(FNT, tit, pos)
         end)
     end)
-    await(SDL.event.MouseButtonDown, function (e)
+    await{tag='until', {tag='sdl', type=SDL.event.MouseButtonDown}, function (e)
         return sdl.point_vs_rect(e, rect)
-    end)
+    end}
 end
 
 function Menu.Main ()
