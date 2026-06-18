@@ -6,13 +6,13 @@ local PP  = sdl.pct_to_pos
 
 local Menu = {}
 
-function Menu.Button (pos, tit)
+Menu.Button = task(function (pos, tit)
     local sfc = assert(IMG.load("data/images/menuitem.png"))
     local img = assert(REN:createTextureFromSurface(sfc))
     local dim = totable('w', 'h', sfc:getSize())
     local rect = sdl.rect(pos, dim)
-    spawn(function ()
-        every('sdl.draw', function ()
+    do_spawn(function ()
+        loop_on('sdl.draw', function ()
             REN:copy(img, nil, rect)
             sdl.write(FNT, tit, pos)
         end)
@@ -20,9 +20,9 @@ function Menu.Button (pos, tit)
     await{tag='until', {tag='sdl', type=SDL.event.MouseButtonDown}, function (e)
         return sdl.point_vs_rect(e, rect)
     end}
-end
+end)
 
-function Menu.Main ()
+Menu.Main = task(function ()
     return par_or(function ()
         await(spawn(Menu.Button, PP(25,25), "Story"))
         return 'Menu.Story'
@@ -39,6 +39,6 @@ function Menu.Main ()
         await(spawn(Menu.Button, PP(50,75), "Exit"))
         return 'Menu.Exit'
     end)
-end
+end)
 
 return Menu

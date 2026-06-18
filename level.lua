@@ -11,14 +11,14 @@ type Tile = [pos:Point, path:_(char*)] + <
 var tiles = ...
 ]]
 
-function Level ()
+Level = task(function ()
     local pingus <close> = tasks()
-    every(1*_s_, function ()
+    loop_on(1*_s_, function ()
         print(#pingus._.dns)
         local pos = sdl.pct_to_pos(50, 25)
         spawn_in(pingus, Pingu, pos)
         --await(false)
     end)
-end
+end)
 
 return Level
