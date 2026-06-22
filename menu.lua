@@ -23,7 +23,7 @@ Menu.Button = task(function (pos, tit)
 end)
 
 Menu.Main = task(function ()
-    return par_or(function ()
+    return par_any(function ()
         await(spawn(Menu.Button, PP(25,25), "Story"))
         return 'Menu.Story'
     end, function ()
