@@ -48,16 +48,16 @@ Pingu = task(function (pos)
             do
                 spd.x = 0.05
                 local _ <close> = spawn(Sprite, pos, 8, "data/images/right.png")
-                await(function ()
+                await {tag='until', function ()
                     return pos.x > 600
-                end)
+                end}
             end
             do
                 spd.x = -0.05
                 local _ <close> = spawn(Sprite, pos, 8, "data/images/left.png")
-                await(function ()
+                await {tag='until', function ()
                     return pos.x < 40
-                end)
+                end}
             end
         end
     end)
